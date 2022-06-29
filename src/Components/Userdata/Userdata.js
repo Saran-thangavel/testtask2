@@ -1,47 +1,62 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
-import { Row, Col, Card } from "react-bootstrap";
+import { Card } from "react-bootstrap";
+import "react-toastify/dist/ReactToastify.css";
+import { useParams } from "react-router-dom";
+import { Modal, Button } from "react-bootstrap";
 
 function Userdata() {
-  const params = useParams();
-  const [singleItem, setSingleItem] = useState({});
+  const [result, setresult] = useState({
+    id: "",
+    image: "",
+    title: "",
+    description: "",
+  });
+  const [show, setShow] = useState(false);
 
-  const fetchSingleUser = () => {
+  const handleClose = () => setShow(false);
+  //   const handleShow = () => setShow(true);
+
+  const params = useParams();
+
+  const showDetail = () => {
     axios
       .get(`https://fakestoreapi.com/products/${params.id}`)
       .then((response) => {
-        setSingleItem(response.data);
-      })
-      .catch((error) => {
-        console.log(error.response.data);
+        setresult(response.data);
       });
   };
 
   useEffect(() => {
-    fetchSingleUser();
+    showDetail();
   }, []);
+
   return (
     <Container>
-      <Row>
-        <Col md={4}>
-          <Card
-            style={{
-              width: "18rem",
-              marginTop: "5%",
-              boxShadow:
-                "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
-            }}
-          >
-            <Card.Body>
-              <Card.Img variant="top" src={singleItem.image} />
-              <hr></hr>
-              <Card.Text>{singleItem.description}</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+      {result.map((value) => {
+        return (
+          <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>{value.title}</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+              <Card.Img variant="top" src={value.image} />
+              <p>{value.description}</p>
+            </Modal.Body>
+
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={handleClose}>
+                Save changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        );
+      })}
     </Container>
   );
 }
