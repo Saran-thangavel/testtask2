@@ -1,32 +1,32 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { ToastContainer, Slide } from "react-toastify";
-import { Container, Nav } from "react-bootstrap";
-import { Row, Col, Card, Button } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Card,
+  Button,
+  Spinner,
+  Figure,
+  Modal,
+  Container,
+  Nav,
+} from "react-bootstrap";
 import "react-toastify/dist/ReactToastify.css";
-import { Modal } from "react-bootstrap";
-import { Figure } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
-import { ClipLoader } from "react-spinners/ClipLoader";
 
 function Home() {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  const [result, setresult] = useState({
-    title: "",
-    image: "",
-    description: "",
-  });
+  const [index, setIndex] = useState([]);
 
   const getData = () => {
+    setLoading(true);
     axios
       .get("https://fakestoreapi.com/products")
       .then((response) => {
+        setLoading(false);
         setData(response.data);
       })
       .catch((error) => {
@@ -34,19 +34,12 @@ function Home() {
       });
   };
 
-  const showDetail = (id) => {
-    axios
-      .get(`https://fakestoreapi.com/products/${id}`, result)
-      .then((response) => {
-        setresult(response.data);
-      });
-  };
   useEffect(() => {
+    getData();
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 5000);
-    getData();
   }, []);
 
   const [currentItems, setCurrentItems] = useState([]);
@@ -71,8 +64,12 @@ function Home() {
 
   return (
     <div>
-      {!currentItems ? (
-        <ClipLoader color={"#D0021B"} loading={loading} size={150} />
+      {loading ? (
+        <Spinner
+          animation="border"
+          variant="success"
+          style={{ marginTop: "20%" }}
+        />
       ) : (
         <Container>
           <ToastContainer transition={Slide} autoClose={5000}></ToastContainer>
@@ -101,9 +98,8 @@ function Home() {
                           data-bs-target="#myModal"
                           onClick={function () {
                             {
-                              handleShow();
-                              showDetail(value.id);
-                              setresult("");
+                              setShow(true);
+                              setIndex(index);
                             }
                           }}
                         >
@@ -115,33 +111,41 @@ function Home() {
                 </Col>
               );
             })}
+            <Modal
+              show={show}
+              onHide={() => {
+                setShow(false);
+              }}
+              backdrop="static"
+              keyboard={false}
+            >
+              <Modal.Header>
+                <Modal.Title>{currentItems[index]?.title}</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Figure>
+                  <Figure.Image
+                    width="100%"
+                    height="15vw"
+                    alt="Image"
+                    src={currentItems[index]?.image}
+                  />
+                </Figure>
+              </Modal.Body>
+              <Modal.Body>{currentItems[index]?.description}</Modal.Body>
+              <Modal.Footer>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setShow(false);
+                  }}
+                >
+                  OK
+                </Button>
+              </Modal.Footer>
+            </Modal>
           </Row>
-          <Modal
-            show={show}
-            onHide={handleClose}
-            backdrop="static"
-            keyboard={false}
-          >
-            <Modal.Header>
-              <Modal.Title>{result.title}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Figure>
-                <Figure.Image
-                  width="100%"
-                  height="15vw"
-                  alt="Image"
-                  src={result.image}
-                />
-              </Figure>
-            </Modal.Body>
-            <Modal.Body>{result.description}</Modal.Body>
-            <Modal.Footer>
-              <Button variant="primary" onClick={handleClose}>
-                OK
-              </Button>
-            </Modal.Footer>
-          </Modal>
+
           <div className="mt-5 ">
             <ReactPaginate
               previousLabel={"Previous"}
