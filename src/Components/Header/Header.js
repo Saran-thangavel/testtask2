@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
+import Spinner from "react-bootstrap";
 
 const Header = () => {
+  const [loading, setLoading] = useState(false);
   return (
     <div>
       <Navbar bg="light" expand="lg" style={{ padding: "2%" }}>

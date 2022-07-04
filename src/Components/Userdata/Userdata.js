@@ -30,6 +30,10 @@ function Userdata() {
 
   useEffect(() => {
     showDetail();
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
   }, []);
 
   return (

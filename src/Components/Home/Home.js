@@ -7,10 +7,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { Modal } from "react-bootstrap";
 import { Figure } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
+import { ClipLoader } from "react-spinners/ClipLoader";
 
 function Home() {
-  const [data, setData] = useState([]);
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -40,6 +42,10 @@ function Home() {
       });
   };
   useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
     getData();
   }, []);
 
@@ -64,98 +70,97 @@ function Home() {
   };
 
   return (
-    <Container>
-      <ToastContainer transition={Slide} autoClose={5000}></ToastContainer>
-      <Row>
-        {currentItems.map((value, index) => {
-          return (
-            <Col lg={4} md={5} sm={4} key={index}>
-              <Card
-                style={{
-                  width: "18rem",
-                  height: "18rem",
-                  marginTop: "5%",
-                  marginLeft: "14%",
-                  backgroundColor: "darkseagreen",
-                  boxShadow:
-                    "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
-                }}
-              >
-                <Card.Body>
-                  <Card.Title>{value.title}</Card.Title>
-                  <Card.Text>{`Id: ${value.id}`}</Card.Text>
-                  <Nav.Link>
-                    <Button
-                      variant="primary"
-                      data-bs-toggle="modal"
-                      data-bs-target="#myModal"
-                      onClick={function () {
-                        {
-                          handleShow();
-                        }
-                        {
-                          showDetail(value.id);
-                        }
-                      }}
-                    >
-                      Know More
-                    </Button>
-                  </Nav.Link>
-                </Card.Body>
-              </Card>
-            </Col>
-          );
-        })}
-      </Row>
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop={"static"}
-        keyboard={false}
-      >
-        <Modal.Header>
-          <Modal.Title>{result.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Figure className="image-fluid">
-            <Figure.Image
-              width="100%"
-              height="15vw"
-              object-fit="cover"
-              alt="171x180"
-              src={result.image}
-            />
-          </Figure>
-        </Modal.Body>
-        <Modal.Body>{result.description}</Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={handleClose}>
-            OK
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <div className="mt-5 ">
-        <ReactPaginate
-          previousLabel={"Previous"}
-          nextLabel={"Next"}
-          breakLabel={"..."}
-          pageCount={pageCount}
-          marginPagesDisplayed={1}
-          pageRangeDisplayed={2}
-          onPageChange={handlePageClick}
-          containerClassName={"pagination justify-content-center"}
-          pageClassName={"page-item"}
-          pageLinkClassName={"page-link"}
-          previousClassName={"page-item"}
-          previousLinkClassName={"page-link"}
-          nextClassName={"page-item"}
-          nextLinkClassName={"page-link"}
-          breakClassName={"page-item"}
-          breakLinkClassName={"page-link"}
-          activeClassName={"active"}
-        ></ReactPaginate>
-      </div>
-    </Container>
+    <div>
+      {!currentItems ? (
+        <ClipLoader color={"#D0021B"} loading={loading} size={150} />
+      ) : (
+        <Container>
+          <ToastContainer transition={Slide} autoClose={5000}></ToastContainer>
+          <Row>
+            {currentItems.map((value, index) => {
+              return (
+                <Col lg={4} md={5} sm={4} key={index}>
+                  <Card
+                    style={{
+                      width: "18rem",
+                      height: "18rem",
+                      marginTop: "5%",
+                      marginLeft: "14%",
+                      backgroundColor: "darkseagreen",
+                      boxShadow:
+                        "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
+                    }}
+                  >
+                    <Card.Body>
+                      <Card.Title>{value.title}</Card.Title>
+                      <Card.Text>{`Id: ${value.id}`}</Card.Text>
+                      <Nav.Link>
+                        <Button
+                          variant="primary"
+                          data-bs-toggle="modal"
+                          data-bs-target="#myModal"
+                          onClick={function () {
+                            {
+                              handleShow();
+                              showDetail(value.id);
+                              setresult("");
+                            }
+                          }}
+                        >
+                          Know More
+                        </Button>
+                      </Nav.Link>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              );
+            })}
+          </Row>
+          <Modal
+            show={show}
+            onHide={handleClose}
+            backdrop="static"
+            keyboard={false}
+          >
+            <Modal.Header>
+              <Modal.Title>{result.title}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Figure>
+                <Figure.Image
+                  width="100%"
+                  height="15vw"
+                  alt="Image"
+                  src={result.image}
+                />
+              </Figure>
+            </Modal.Body>
+            <Modal.Body>{result.description}</Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" onClick={handleClose}>
+                OK
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          <div className="mt-5 ">
+            <ReactPaginate
+              previousLabel={"Previous"}
+              nextLabel={"Next"}
+              pageCount={pageCount}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination justify-content-center"}
+              pageClassName={"page-item"}
+              pageLinkClassName={"page-link"}
+              previousClassName={"page-item"}
+              previousLinkClassName={"page-link"}
+              nextClassName={"page-item"}
+              nextLinkClassName={"page-link"}
+              activeClassName={"active"}
+            ></ReactPaginate>
+          </div>
+        </Container>
+      )}
+    </div>
   );
 }
 
