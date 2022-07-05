@@ -96,10 +96,8 @@ function Home() {
                           data-bs-toggle="modal"
                           data-bs-target="#myModal"
                           onClick={function () {
-                            {
-                              setShow(true);
-                              setIndex(index);
-                            }
+                            setShow(true);
+                            setIndex(index);
                           }}
                         >
                           Know More
@@ -129,7 +127,7 @@ function Home() {
                     margin: "auto",
                     display: "block",
                   }}
-                  alt="Image"
+                  alt=""
                   src={currentItems[index]?.image}
                 />
               </Modal.Body>
