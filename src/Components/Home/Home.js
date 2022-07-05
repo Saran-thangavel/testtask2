@@ -7,7 +7,6 @@ import {
   Card,
   Button,
   Spinner,
-  Figure,
   Modal,
   Container,
   Nav,
@@ -123,22 +122,27 @@ function Home() {
                 <Modal.Title>{currentItems[index]?.title}</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <Figure>
-                  <Figure.Image
-                    width="100%"
-                    height="15vw"
-                    alt="Image"
-                    src={currentItems[index]?.image}
-                  />
-                </Figure>
+                <img
+                  style={{
+                    height: "250px",
+                    width: "200px",
+                    margin: "auto",
+                    display: "block",
+                  }}
+                  alt="Image"
+                  src={currentItems[index]?.image}
+                />
               </Modal.Body>
-              <Modal.Body>{currentItems[index]?.description}</Modal.Body>
+              <Modal.Body style={{ justifyContent: "left" }}>
+                {currentItems[index]?.description}
+              </Modal.Body>
               <Modal.Footer>
                 <Button
                   variant="primary"
                   onClick={() => {
                     setShow(false);
                   }}
+                  style={{ marginRight: "45%" }}
                 >
                   OK
                 </Button>
