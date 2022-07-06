@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -13,10 +14,22 @@ const Header = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav>
               <Nav.Item>
-                <Nav.Link href="#">Profile</Nav.Link>
+                <NavLink
+                  to="#"
+                  className="text-muted"
+                  style={{ textDecoration: "none" }}
+                >
+                  Profile
+                </NavLink>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link href="/home">Home</Nav.Link>
+                <NavLink
+                  to="/home"
+                  className="text-muted"
+                  style={{ textDecoration: "none", marginLeft: "20%" }}
+                >
+                  Home
+                </NavLink>
               </Nav.Item>
             </Nav>
           </Navbar.Collapse>
